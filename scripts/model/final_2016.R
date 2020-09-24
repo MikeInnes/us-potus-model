@@ -522,27 +522,27 @@ message("Running model...")
 #("scripts/model/poll_model_2020.stan")
 
 # if rstan, uncomment these lines:
-# model <- rstan::stan_model("scripts/model/poll_model_2020.stan")
-# out <- rstan::sampling(model, data = data,
-#                        refresh = n_refresh,
-#                        chains  = n_chains, iter = 500, warmup = 250
-# )
-
-# else if cmdstan, uncomment these
-model <- cmdstanr::cmdstan_model("scripts/model/poll_model_2020.stan",compile=TRUE,force=TRUE)
-fit <- model$sample(
-  data = data,
-  seed = 1843,
-  parallel_chains = n_cores,
-  chains = n_chains,
-  iter_warmup = n_warmup,
-  iter_sampling = n_sampling,
-  refresh = n_refresh
+model <- rstan::stan_model("scripts/model/poll_model_2020.stan")
+out <- rstan::sampling(model, data = data,
+                       refresh = n_refresh,
+                       chains  = n_chains, iter = 1000, warmup = 500
 )
 
-out <- rstan::read_stan_csv(fit$output_files())
-rm(fit)
-gc()
+# else if cmdstan, uncomment these
+# model <- cmdstanr::cmdstan_model("scripts/model/poll_model_2020.stan",compile=TRUE,force=TRUE)
+# fit <- model$sample(
+#   data = data,
+#   seed = 1843,
+#   parallel_chains = n_cores,
+#   chains = n_chains,
+#   iter_warmup = n_warmup,
+#   iter_sampling = n_sampling,
+#   refresh = n_refresh
+# )
+
+# out <- rstan::read_stan_csv(fit$output_files())
+# rm(fit)
+# gc()
 
 # save model for today
 write_rds(out, sprintf('models/stan_model_%s.rds',RUN_DATE),compress = 'gz')
